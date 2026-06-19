@@ -12,8 +12,11 @@ import { useMemo, useState } from "react";
 
 export default function IncidentsPage() {
   const allIncidents = useMemo(() => getMockIncidents(), []);
-  const [severityFilter, setSeverityFilter] = useState<string>("all");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [severityFilter, setSeverityFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  const handleSeverityChange = (value: string | null) => { if (value) setSeverityFilter(value); };
+  const handleStatusChange = (value: string | null) => { if (value) setStatusFilter(value); };
   const [search, setSearch] = useState("");
 
   const incidents = allIncidents.filter(inc => {
@@ -51,7 +54,7 @@ export default function IncidentsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input placeholder="Search incidents..." className="pl-9 bg-card border-border" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <Select value={severityFilter} onValueChange={setSeverityFilter}>
+          <Select value={severityFilter} onValueChange={handleSeverityChange}>
             <SelectTrigger className="w-[140px] bg-card"><Filter className="w-3 h-3 mr-2" /><SelectValue placeholder="Severity" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Severity</SelectItem>
@@ -61,7 +64,7 @@ export default function IncidentsPage() {
               <SelectItem value="LOW">Low</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <Select value={statusFilter} onValueChange={handleStatusChange}>
             <SelectTrigger className="w-[150px] bg-card"><SelectValue placeholder="Status" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
