@@ -1,5 +1,4 @@
-# 🛡️ SentinelAI SOC
-
+# 🛡️CyberGuardian X
 ## AI-Powered Autonomous Security Operations Center
 
 An enterprise-grade, production-ready SOC platform that leverages **Agentic AI**, **Large Language Models**, **RAG**, and **Multi-Agent Orchestration** to detect, investigate, analyze, and respond to cyber threats in real-time.
@@ -112,4 +111,4 @@ MIT License
 
 ---
 
-**Built with ❤️ by SentinelAI Team**
+**Built with ❤️ by CyberGuardian X Team**
