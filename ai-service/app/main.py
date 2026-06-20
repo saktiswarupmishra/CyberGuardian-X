@@ -12,9 +12,9 @@ from app.routes import copilot, agents, analysis
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan handler"""
-    print("🛡️ SentinelAI SOC AI Service starting...")
+    print("[SentinelAI SOC] AI Service starting...")
     yield
-    print("🛡️ SentinelAI SOC AI Service shutting down...")
+    print("[SentinelAI SOC] AI Service shutting down...")
 
 app = FastAPI(
     title="SentinelAI SOC - AI Service",
