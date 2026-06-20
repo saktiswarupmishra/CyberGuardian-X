@@ -6,7 +6,7 @@ spring:
     name: sentinel-soc
   data:
     mongodb:
-      uri: mongodb://sentinelai:sentinelai_secure_2026@localhost:27017/sentinelai_soc?authSource=admin
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/sentinelai_soc}
       database: sentinelai_soc
   graphql:
     graphiql:
