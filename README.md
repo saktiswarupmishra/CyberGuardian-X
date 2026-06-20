@@ -121,7 +121,7 @@ npm run dev
 ### 3. Start Backend
 ```bash
 cd backend
-./mvnw spring-boot:run
+mvn spring-boot:run
 ```
 
 ### 4. Start AI Service
