@@ -1,0 +1,82 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: sentinelai-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: sentinelai
+      MONGO_INITDB_ROOT_PASSWORD: sentinelai_secure_2026
+      MONGO_INITDB_DATABASE: sentinelai_soc
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sentinelai
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: sentinelai-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://sentinelai:sentinelai_secure_2026@mongodb:27017/sentinelai_soc?authSource=admin
+      AI_SERVICE_BASE_URL: http://ai-service:8000/api/v1
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - sentinelai
+
+  ai-service:
+    build:
+      context: ../ai-service
+      dockerfile: Dockerfile
+    container_name: sentinelai-ai
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      MONGODB_URI: mongodb://sentinelai:sentinelai_secure_2026@mongodb:27017/sentinelai_soc?authSource=admin
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - sentinelai
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: sentinelai-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+      NEXT_PUBLIC_AI_URL: http://localhost:8000
+    depends_on:
+      - backend
+      - ai-service
+    networks:
+      - sentinelai
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  sentinelai:
+    driver: bridge
